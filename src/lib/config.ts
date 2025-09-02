@@ -16,7 +16,7 @@ export const CONFIG = {
 	},
 	github: {
 		owner: "phyter1",
-		repo: "claude-agents-installer",
+		repo: "claude-code-assets",
 		branch: "main",
 		apiBase: "https://api.github.com",
 		rawBase: "https://raw.githubusercontent.com",
