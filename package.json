@@ -1,0 +1,35 @@
+{
+	"name": "claude-agents-installer",
+	"version": "1.0.0",
+	"module": "src/index.ts",
+	"type": "module",
+	"private": false,
+	"bin": {
+		"claude-agents": "./dist/claude-agents"
+	},
+	"scripts": {
+		"test": "bun test",
+		"test:watch": "bun test --watch",
+		"test:coverage": "bun test --coverage",
+		"lint": "bunx biome check src/ tests/",
+		"lint:fix": "bunx biome check --write src/ tests/",
+		"typecheck": "bunx tsc --noEmit",
+		"quality:check": "bun run lint && bun run typecheck && bun run test",
+		"build": "bash scripts/build.sh",
+		"build:cross": "bash scripts/build-cross-platform.sh",
+		"installers": "bash scripts/generate-installers.sh",
+		"release": "bash scripts/build-cross-platform.sh && bash scripts/generate-installers.sh"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.2.2",
+		"@types/bun": "latest",
+		"lefthook": "^1.12.3"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"chalk": "^5.4.1",
+		"commander": "^13.0.0"
+	}
+}
