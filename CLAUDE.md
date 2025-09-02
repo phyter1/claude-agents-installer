@@ -1,110 +1,67 @@
 
-# Claude Agents Installer - Development Notes
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
-This is a CLI tool for installing and managing Claude agents, documentation, and reference code. It's built with Bun and TypeScript, following the same patterns as the tts-cli project.
+CLI tool for installing and managing Claude agents, documentation, and reference code. Built with Bun and TypeScript using Commander.js for CLI commands.
 
-## Tech Stack
-
-- **Runtime**: Bun
-- **Language**: TypeScript
-- **CLI Framework**: Commander.js
-- **Styling**: Chalk for terminal colors
-- **Linting**: Biome
-- **Build**: Bun's native compiler
-
-## Project Structure
-
-```
-claude-agents-installer/
-├── src/
-│   ├── index.ts          # Main CLI entry point
-│   └── lib/
-│       ├── config.ts     # Configuration and constants
-│       ├── utils.ts      # Utility functions
-│       ├── install.ts    # Install command
-│       ├── list.ts       # List command
-│       ├── update.ts     # Update command
-│       ├── remove.ts     # Remove command
-│       └── status.ts     # Status command
-├── assets/
-│   ├── agents/           # Agent markdown files
-│   ├── docs/             # Documentation files
-│   └── reference_code/   # Reference code projects
-├── scripts/
-│   ├── build.sh          # Build script
-│   ├── build-cross-platform.sh
-│   └── generate-installers.sh
-├── manifest.json         # Resource manifest
-└── create-manifest.js    # Manifest generator
-
-```
-
-## Commands
-
-### Development
+## Essential Commands
 
 ```bash
-# Install dependencies
-bun install
+# Development
+bun install                  # Install dependencies
+bun run src/index.ts        # Run CLI in development
+bun test                    # Run tests (currently no tests written)
+bun run lint                # Run Biome linter
+bun run lint:fix            # Fix linting issues
+bun run typecheck           # TypeScript type checking
+bun run quality:check       # Run lint, typecheck, and tests together
 
-# Run in development
-bun run src/index.ts
-
-# Run tests
-bun test
-
-# Lint code
-bun run lint
-
-# Type check
-bun run typecheck
+# Building & Release
+bun run build               # Build executable for current platform
+bun run build:cross         # Build for all platforms (macOS, Linux, Windows)
+bun run installers          # Generate platform-specific installers
+bun run release             # Full release build (cross-platform + installers)
 ```
 
-### Building
+## Architecture
 
-```bash
-# Build for current platform
-bun run build
+### Core Components
 
-# Build for all platforms
-bun run build:cross
+**Command Structure** (src/lib/):
+- Each command (`install`, `list`, `update`, `remove`, `status`) is a separate module
+- Commands fetch resources from GitHub using the manifest.json
+- Installation paths default to `~/.claude/` with subdirectories for agents, docs, and reference_code
 
-# Generate installers
-bun run installers
-```
+**Configuration** (src/lib/config.ts):
+- Central configuration for paths, GitHub repository details, and valid resource types
+- Assets repository: `phyter1/claude-code-assets`
+- Resources fetched from raw GitHub content
 
-## Key Design Decisions
+**Asset Management**:
+- Assets are stored in a separate repository: `phyter1/claude-code-assets`
+- `manifest.json` in the assets repository contains metadata for all available resources
+- Includes file sizes, descriptions, and categorization for docs
 
-1. **GitHub-based Distribution**: Resources are fetched from the GitHub repository, making updates easy without rebuilding the CLI.
+### Resource Types
 
-2. **Manifest-driven**: A `manifest.json` file lists all available resources with metadata.
+1. **Agents**: Markdown files defining specialized AI agents
+2. **Docs**: Documentation for JavaScript/TypeScript libraries
+3. **Reference Code**: Example projects and boilerplate code
 
-3. **Self-contained Installers**: Platform-specific installers embed the binary for easy distribution.
+### Key Implementation Details
 
-4. **Flexible Installation**: Users can install all resources or filter specific ones.
+- **GitHub-based distribution**: All resources fetched from GitHub at install time
+- **Filter support**: Commands accept `--filter` for selective installation/removal
+- **Dry-run mode**: `--dry-run` shows what would be done without executing
+- **Force mode**: `--force` overwrites existing files
+- **Custom directories**: `--dir` option for non-default installation paths
 
-## Testing Strategy
+## Code Style
 
-- Unit tests for utility functions
-- Integration tests for commands
-- End-to-end tests for installation flow
-
-## Deployment Process
-
-1. Update assets in the repository
-2. Run `bun run create-manifest.js` to update manifest
-3. Build executables with `bun run build:cross`
-4. Generate installers with `bun run installers`
-5. Commit and push to GitHub
-6. Create a GitHub release with the installers
-
-## Future Enhancements
-
-- [ ] Version management for resources
-- [ ] Dependency resolution for agents
-- [ ] Interactive installation mode
-- [ ] Resource search functionality
-- [ ] Custom resource repositories
-- [ ] Offline mode with bundled resources
+- **Formatter**: Biome with tab indentation and double quotes
+- **TypeScript**: Strict mode enabled, ESNext target
+- **Module System**: ESM with Bun's bundler resolution
+- **Error Handling**: Commands throw errors that are caught at the top level

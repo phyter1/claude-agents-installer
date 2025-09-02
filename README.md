@@ -128,7 +128,10 @@ MIT
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
+To contribute new assets, please submit pull requests to the [claude-code-assets](https://github.com/phyter1/claude-code-assets) repository.
+
 ## 🔗 Links
 
 - [GitHub Repository](https://github.com/phyter1/claude-agents-installer)
+- [Assets Repository](https://github.com/phyter1/claude-code-assets)
 - [Report Issues](https://github.com/phyter1/claude-agents-installer/issues)
